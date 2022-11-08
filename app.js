@@ -1,21 +1,23 @@
 'use strict';
 
 // #pragma: Global Variables
-let duckVotes = 5;
+let duckVotes = 25;
 let duckArray = [];
 
 //pragma: Dom References
 let imgContainer = document.getElementById('image-container');
+let resultsBtn = document.getElementById('display-results-button');
+let resultList = document.getElementById('results-container');
 let imgOne = document.getElementById('img-one');
 let imgTwo = document.getElementById('img-two');
 let imgThree = document.getElementById('img-three');
 
 
 //Constructor
-function Duck(name, imgFile = 'jpg'){
+function Duck(name, imgFile = 'jpg') {
   this.name = name;
   this.imagePath = `images/${name}.${imgFile}`;
-  this.imageShown =0;
+  this.imageShown = 0;
   this.imageClicks = 0;
 }
 
@@ -50,9 +52,9 @@ function renderImages() {
   imgTwo.alt = duckArray[imageTwoDuck].name;
   imgThree.alt = duckArray[imageThreeDuck].name;
 
-  duckArray[imageOneDuck].views++;
-  duckArray[imageTwoDuck].views++;
-  duckArray[imageThreeDuck].views++;
+  duckArray[imageOneDuck].imageShown++;
+  duckArray[imageTwoDuck].imageShown++;
+  duckArray[imageThreeDuck].imageShown++;
 }
 
 // #pragma Create Object Using Constructor
@@ -91,6 +93,29 @@ function handleImageClick(event) {
       console.log(duckArray[i]);
     }
   }
+  duckVotes--;
+  renderImages();
+
+  if (duckVotes === 0) {
+    imgContainer.removeEventListener('click', handleImageClick);
+  }
+}
+
+function handleResultsClick() {
+  console.log('clicked button');
+  if (duckVotes === 0) {
+    for (let i = 0; i < duckArray.length; i++) {
+      console.log(duckArray[i].name);
+      let liElem = document.createElement('li');
+      liElem.textContent = `${duckArray[i].name} was viewed: ${duckArray[i].imageShown} time(s) and clicked ${duckArray[i].imageClicks} time(s). ${duckArray[i].name} was clicked ${Math.round(duckArray[i].imageClicks/duckArray[i].imageShown *100)}% of the time it was shown`;
+
+      resultList.appendChild(liElem);
+    }
+    resultsBtn.removeEventListener('click', handleResultsClick);
+  }
 }
 // Step 2 Attach Event Listener: (type of event, callback function)
 imgContainer.addEventListener('click', handleImageClick);
+
+resultsBtn.addEventListener('click', handleResultsClick);
+
