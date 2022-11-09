@@ -4,6 +4,11 @@
 let duckVotes = 25;
 let duckArray = [];
 
+let randomDuckArray = [];
+
+
+
+
 //pragma: Dom References
 let imgContainer = document.getElementById('image-container');
 let resultsBtn = document.getElementById('display-results-button');
@@ -11,6 +16,10 @@ let resultList = document.getElementById('results-container');
 let imgOne = document.getElementById('img-one');
 let imgTwo = document.getElementById('img-two');
 let imgThree = document.getElementById('img-three');
+
+
+let chartContext = document.getElementById('my-chart').getContext('2d');
+
 
 
 //Constructor
@@ -21,7 +30,11 @@ function Duck(name, imgFile = 'jpg') {
   this.imageClicks = 0;
 }
 
+
+//Chart Object
+
 //Prototype
+
 
 
 
@@ -31,23 +44,27 @@ function randomDuck(name, imagePath) {
   return Math.floor(Math.random() * duckArray.length);
 
 }
-function renderImages() {
-  let imageOneDuck = randomDuck();
-  let imageTwoDuck = randomDuck();
-  let imageThreeDuck = randomDuck();
 
-  while (imageOneDuck === imageTwoDuck || imageOneDuck === imageThreeDuck) {
-    imageTwoDuck = randomDuck();
-    imageThreeDuck = randomDuck();
+
+function renderImages() {
+  while (randomDuckArray.length < 6) {
+    let randomDucks = randomDuck();
+    if (!randomDuckArray.includes(randomDucks)) {
+      randomDuckArray.push(randomDucks);
+    }
   }
-  while (imageTwoDuck === imageThreeDuck) {
-    imageThreeDuck = randomDuck();
-  }
+  let imageOneDuck = randomDuckArray.shift();
+  let imageTwoDuck = randomDuckArray.shift();
+  let imageThreeDuck = randomDuckArray.shift();
+
+
+
 
 
   imgOne.src = duckArray[imageOneDuck].imagePath;
   imgTwo.src = duckArray[imageTwoDuck].imagePath;
   imgThree.src = duckArray[imageThreeDuck].imagePath;
+
   imgOne.alt = duckArray[imageOneDuck].name;
   imgTwo.alt = duckArray[imageTwoDuck].name;
   imgThree.alt = duckArray[imageThreeDuck].name;
@@ -82,36 +99,68 @@ duckArray.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulh
 
 renderImages();
 
+
 //Step 3: Define our Callback
 function handleImageClick(event) {
 
   let duckClicked = event.target.alt;
-  console.log(duckClicked);
+
   for (let i = 0; i < duckArray.length; i++) {
     if (duckArray[i].name === duckClicked) {
       duckArray[i].imageClicks++;
       console.log(duckArray[i]);
+
+      duckVotes--;
+      renderImages();
     }
   }
-  duckVotes--;
-  renderImages();
 
   if (duckVotes === 0) {
     imgContainer.removeEventListener('click', handleImageClick);
+
+
   }
 }
 
 function handleResultsClick() {
-  console.log('clicked button');
+
   if (duckVotes === 0) {
     for (let i = 0; i < duckArray.length; i++) {
-      console.log(duckArray[i].name);
       let liElem = document.createElement('li');
-      liElem.textContent = `${duckArray[i].name} was viewed: ${duckArray[i].imageShown} time(s) and clicked ${duckArray[i].imageClicks} time(s). ${duckArray[i].name} was clicked ${Math.round(duckArray[i].imageClicks/duckArray[i].imageShown *100)}% of the time it was shown`;
+      liElem.textContent = `${duckArray[i].name} was viewed: ${duckArray[i].imageShown} time(s) and clicked ${duckArray[i].imageClicks} time(s). ${duckArray[i].name} was clicked ${Math.round(duckArray[i].imageClicks / duckArray[i].imageShown * 100)}% of the time it was shown`;
 
       resultList.appendChild(liElem);
     }
     resultsBtn.removeEventListener('click', handleResultsClick);
+
+    let duckNames = [];
+    let duckShown = [];
+    let duckClicks = [];
+    for (let i = 0; i < duckArray.length; i++) {
+      duckNames.push(duckArray[i].name);
+      duckShown.push(duckArray[i].imageShown);
+      duckClicks.push(duckArray[i].imageClicks);
+    }
+    let chartConfig = {
+      type: 'bar',
+      data: {
+        datasets: [{
+          label: '# Shown',
+          data: duckShown,
+          backgroundColor: 'green',
+        }, {
+          label: '# Clicked',
+          data: duckClicks,
+          backgroundColor: 'yellow'
+        }],
+        labels: duckNames,
+      },
+      options: {
+
+      },
+    };
+    const myChart = new Chart(chartContext, chartConfig);
+
   }
 }
 // Step 2 Attach Event Listener: (type of event, callback function)
