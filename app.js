@@ -3,7 +3,10 @@
 // #pragma: Global Variables
 let duckVotes = 25;
 let duckArray = [];
+
 let randomDuckArray = [];
+
+
 
 
 //pragma: Dom References
@@ -14,7 +17,9 @@ let imgOne = document.getElementById('img-one');
 let imgTwo = document.getElementById('img-two');
 let imgThree = document.getElementById('img-three');
 
+
 let chartContext = document.getElementById('my-chart').getContext('2d');
+
 
 
 //Constructor
@@ -25,7 +30,12 @@ function Duck(name, imgFile = 'jpg') {
   this.imageClicks = 0;
 }
 
+
 //Chart Object
+
+//Prototype
+
+
 
 
 // #pragma: Helper Functions - Utilities
@@ -34,6 +44,7 @@ function randomDuck(name, imagePath) {
   return Math.floor(Math.random() * duckArray.length);
 
 }
+
 
 function renderImages() {
   while (randomDuckArray.length < 6) {
@@ -45,6 +56,9 @@ function renderImages() {
   let imageOneDuck = randomDuckArray.shift();
   let imageTwoDuck = randomDuckArray.shift();
   let imageThreeDuck = randomDuckArray.shift();
+
+
+
 
 
   imgOne.src = duckArray[imageOneDuck].imagePath;
@@ -90,10 +104,12 @@ renderImages();
 function handleImageClick(event) {
 
   let duckClicked = event.target.alt;
+
   for (let i = 0; i < duckArray.length; i++) {
     if (duckArray[i].name === duckClicked) {
       duckArray[i].imageClicks++;
       console.log(duckArray[i]);
+
       duckVotes--;
       renderImages();
     }
@@ -102,10 +118,12 @@ function handleImageClick(event) {
   if (duckVotes === 0) {
     imgContainer.removeEventListener('click', handleImageClick);
 
+
   }
 }
 
 function handleResultsClick() {
+
   if (duckVotes === 0) {
     for (let i = 0; i < duckArray.length; i++) {
       let liElem = document.createElement('li');
@@ -114,6 +132,7 @@ function handleResultsClick() {
       resultList.appendChild(liElem);
     }
     resultsBtn.removeEventListener('click', handleResultsClick);
+
     let duckNames = [];
     let duckShown = [];
     let duckClicks = [];
@@ -141,6 +160,7 @@ function handleResultsClick() {
       },
     };
     const myChart = new Chart(chartContext, chartConfig);
+
   }
 }
 // Step 2 Attach Event Listener: (type of event, callback function)
