@@ -5,6 +5,8 @@ let duckVotes = 25;
 let duckArray = [];
 
 let randomDuckArray = [];
+let reinstatedDucks = [];
+
 
 
 
@@ -74,29 +76,43 @@ function renderImages() {
   duckArray[imageThreeDuck].imageShown++;
 }
 
-// #pragma Create Object Using Constructor
-let bag = new Duck('bag');
-let banana = new Duck('banana');
-let bathroom = new Duck('bathroom');
-let boots = new Duck('boots');
-let breakfast = new Duck('breakfast');
-let bubblegum = new Duck('bubblegum');
-let chair = new Duck('chair');
-let cthulhu = new Duck('cthulhu');
-let dog = new Duck('dog-duck');
-let dragon = new Duck('dragon');
-let pen = new Duck('pen');
-let pet = new Duck('pet-sweep');
-let scissors = new Duck('scissors');
-let shark = new Duck('shark');
-let sweep = new Duck('sweep', 'png');
-let tauntaun = new Duck('tauntaun');
-let unicorn = new Duck('unicorn');
-let water = new Duck('water-can');
-let wine = new Duck('wine-glass');
+let retrievedDucks = localStorage.getItem('myDucks');
 
-duckArray.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dog, dragon, pen, pet, scissors, shark, sweep, tauntaun, unicorn, water, wine);
+let parsedDucks = JSON.parse(retrievedDucks);
 
+if (parsedDucks) {
+  duckArray = parsedDucks;
+  for (let i = 0; i < parsedDucks.length; i++) {
+    let newDuck = new Duck(parsedDucks[i].name);
+    newDuck.imageClicks = parsedDucks[i].imageClicks;
+    newDuck.imageShown = parsedDucks[i].imageShown;
+    reinstatedDucks.push(newDuck);
+  }
+} else {
+  // #pragma Create Object Using Constructor
+  let bag = new Duck('bag');
+  let banana = new Duck('banana');
+  let bathroom = new Duck('bathroom');
+  let boots = new Duck('boots');
+  let breakfast = new Duck('breakfast');
+  let bubblegum = new Duck('bubblegum');
+  let chair = new Duck('chair');
+  let cthulhu = new Duck('cthulhu');
+  let dog = new Duck('dog-duck');
+  let dragon = new Duck('dragon');
+  let pen = new Duck('pen');
+  let pet = new Duck('pet-sweep');
+  let scissors = new Duck('scissors');
+  let shark = new Duck('shark');
+  let sweep = new Duck('sweep', 'png');
+  let tauntaun = new Duck('tauntaun');
+  let unicorn = new Duck('unicorn');
+  let water = new Duck('water-can');
+  let wine = new Duck('wine-glass');
+
+  duckArray.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dog, dragon, pen, pet, scissors, shark, sweep, tauntaun, unicorn, water, wine);
+
+}
 renderImages();
 
 
@@ -118,6 +134,9 @@ function handleImageClick(event) {
   if (duckVotes === 0) {
     imgContainer.removeEventListener('click', handleImageClick);
 
+    let stringifiedDucks = JSON.stringify(duckArray);
+
+    localStorage.setItem('myDucks', stringifiedDucks);
 
   }
 }
