@@ -43,6 +43,16 @@ div {
 canvas {
   width: 500px;
   height: 300px;
-  background-color: white;
+  
+}
 
+p {
+  margin-bottom: 50px;
+  color: maroon;
+  text-align: center;
+  font-size: x-large;
+}
+
+h1 {
+  color: maroon;
 }

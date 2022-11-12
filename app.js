@@ -170,7 +170,7 @@ function handleResultsClick() {
         }, {
           label: '# Clicked',
           data: duckClicks,
-          backgroundColor: 'yellow'
+          backgroundColor: 'tan'
         }],
         labels: duckNames,
       },
